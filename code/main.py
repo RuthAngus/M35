@@ -3,18 +3,21 @@ import matplotlib.pyplot as plt
 import k2_get_id as kgi
 
 def load_data():
-    ID, _, _, _, _, _, _, _, _, _ = \
-		    np.genfromtxt("../data/bouy.dat", skip_header=56,
+    ID, _, _, _, _, _, _, _ = \
+		    np.genfromtxt("../data/bouy.dat", skip_header=50,
                                   dtype=str, invalid_raise=False).T
-    _, RA, dec, ra_err, dec_err, g, gerr, r, rerr, P = \
-            np.genfromtxt("../data/bouy.dat", skip_header=56,
+    _, RA, dec, g, gerr, r, rerr, P = \
+            np.genfromtxt("../data/bouy.dat", skip_header=50,
                           invalid_raise=False).T
-    return ID, RA, dec, ra_err, dec_err, g, gerr, r, rerr, P
+    return ID, RA, dec, g, gerr, r, rerr, P
 
 if __name__ == "__main__":
 
-    ID, ra, dec, ra_err, dec_err, g, gerr, r, rerr, P = load_data()
+    ID, ra, dec, g, gerr, r, rerr, P = load_data()
     m = P > .95
+    print len(ra)
+    np.savetxt("m35_coords.txt", np.transpose((ra, dec)))
+    assert 0
     RAs, DECs = ra[m], dec[m]
 
     for i, ra in enumerate(RAs):
@@ -27,7 +30,7 @@ if __name__ == "__main__":
 					       lcdir="/kepler/kepler2/K2/C00/lc/")
 	    ndata = mag.shape[0]
 
-	    objid = kgi.ra_dec_search_multi(ra, DECs[i], ras, decs,
+# 	    objid = kgi.ra_dec_search_multi(ra, DECs[i], ras, decs,
 
 	    if np.isfinite(corr_mag[0]): print "yes"
 	    else: print "no", corr_mag[0]
